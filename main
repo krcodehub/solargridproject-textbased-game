@@ -1,5 +1,6 @@
 
 
+
 def instructions():       # this is what will be printed at the start of the game
     print("""
     The Solar Grid Project
@@ -59,7 +60,7 @@ while True:
             break
     elif move[1] in rooms[current_room]:
         current_room = rooms[current_room][move[1]]
-        print("You're in the " + current_room + ". Current inventory: " + str(inventory))
+        print("You're in the " + current_room + ". Current inventory: " + str(inventory) + "\n")
         status()  # Show status after moving
 
     elif move[0] == "get":
@@ -71,13 +72,11 @@ while True:
             status()  # Show status after collecting
         else:
             print("Item not found in this room.")
+
+    elif all(item in inventory for item in ['Access Badge', 'Encryption Key', 'Quantum Processor', 'Circuit Board', 'USB Adapter', 'Energy Core', 'Control Module']) and current_room == 'Satellite Confrence Room':
+        print("Congratulations! You have collected all items to build the solar grid.")
+        print("The grid is activated and the world is safe!")
     
     else:
         print("You can't move in that direction.")
         print("You're still in " + current_room)
-
-
- 
-
-#will possible need for loop for checking and outputing inventory items in the current room
-#will possibly add import module 'os' for clearing screen after each move showing current room and inventory only
