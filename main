@@ -1,0 +1,58 @@
+def instructions():       # this is what will be printed at the start of the game
+    print("""
+    The Solar Grid Project
+    /\ \/ /\ \/ /\ \/
+    Inputs:
+    move [direction]
+    exit [to exit the game]
+    """) 
+
+
+rooms = {'Lobby': {'south': 'Security Lab'},
+         'Security Lab': {'north': 'Lobby', 'east': 'Engineering Lab', 'south': 'Satellite Control', 'west': 'Server Room'},
+         'Engineering Lab': {'west': 'Security Lab', 'south': 'Robotics Lab'},
+         'Robotics Lab': {'north': 'Engineering Lab'},
+         'Server Room': {'east': 'Security Lab', 'south': 'Communications', 'west': 'Power Room'},
+         'Communications': {'north': 'Server Room'},
+         'Power Room': {'east': 'Server Room'},
+         'Satellite Control': {'north': 'Security Lab', 'south': 'Satellite Confrence Room'},
+         'Exit': {}
+         }
+
+inventory = ['Access Badge', 'Encryption Key', 'Quantum Processor', 'Circuit Board', 'USB Adapter', 'Energy Core', 'Control Module']
+
+current_room = 'Lobby'
+inventory = []
+directions = [rooms]
+
+
+instructions()        # start of the game
+
+print("You're in the " + current_room)
+print("Current inventory is: ")
+print("The 'item' is located in this room!")
+
+while True:
+    print("Move either north, south, east, or west using 'move_direction'.")
+
+
+    move = input(f"Enter your move: ")
+    move = move.split(" ", 1) 
+    if move[0] == 'exit':
+            print("Do you want to exit the game?")
+            confirm_exit = input("Type 'yes' to confirm exit: ")
+            if confirm_exit.lower() != 'yes':
+                continue
+            break
+    elif move[1] in rooms[current_room]:
+        current_room = rooms[current_room][move[1]]
+        print("You're in the " + current_room + ". Current inventory: " + str(inventory))
+    
+    else:
+        print("You can't move in that direction.")
+        print("You're still in " + current_room)
+    
+
+#will possible need for loop for checking and outputing inventory items in the current room
+#will possibly add import module 'os' for clearing screen after each move showing current room and inventory only
+
