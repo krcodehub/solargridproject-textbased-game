@@ -1,21 +1,39 @@
+# Kendall Reid
+# Solar Grid Project Game
+
+
 def instructions():       # this is what will be printed at the start of the game
     print("""
     The Solar Grid Project
     /\ \/ /\ \/ /\ \/
     Inputs:
     move [direction]
+    get [item] (case sensitive)
     exit [to exit the game]
     """) 
 
+def status():
+    print("--------------------")
+    print(f"Current room: {current_room}")
+    print(f"Inventory: {inventory}")
+    print("--------------------")
+    
+    if "items" in rooms[current_room]:
+        room_items = rooms[current_room]['items']
+        print(f"The {room_items} is in this room.")
+    else:
+        print("Congratulations! You have collected all items to build the solar grid.")
+        print("The grid is activated and the world is safe!")
 
-rooms = {'Lobby': {'south': 'Security Lab'},
-         'Security Lab': {'north': 'Lobby', 'east': 'Engineering Lab', 'south': 'Satellite Control', 'west': 'Server Room'},
-         'Engineering Lab': {'west': 'Security Lab', 'south': 'Robotics Lab'},
-         'Robotics Lab': {'north': 'Engineering Lab'},
-         'Server Room': {'east': 'Security Lab', 'south': 'Communications', 'west': 'Power Room'},
-         'Communications': {'north': 'Server Room'},
-         'Power Room': {'east': 'Server Room'},
-         'Satellite Control': {'north': 'Security Lab', 'south': 'Satellite Confrence Room'},
+rooms = {'Lobby': {'south': 'Security Lab', 'items': ['Access Badge']},
+         'Security Lab': {'north': 'Lobby', 'east': 'Engineering Lab', 'south': 'Satellite Control', 'west': 'Server Room', 'items': ['Encryption Key']},
+         'Engineering Lab': {'west': 'Security Lab', 'south': 'Robotics Lab', 'items': ['Circuit Board']},
+         'Robotics Lab': {'north': 'Engineering Lab', 'items': ['USB Adapter']},
+         'Server Room': {'east': 'Security Lab', 'south': 'Communications', 'west': 'Power Room', 'items': ['Quantum Processor']},
+         'Communications': {'north': 'Server Room', 'items': ['Satellite Uplink']},
+         'Power Room': {'east': 'Server Room', 'items': ['Energy Core']},
+         'Satellite Control': {'north': 'Security Lab', 'south': 'Satellite Confrence Room', 'items': ['Control Module']},
+         'Satellite Confrence Room': {'north': 'Satellite Control'},
          'Exit': {}
          }
 
@@ -30,29 +48,43 @@ instructions()        # start of the game
 
 print("You're in the " + current_room)
 print("Current inventory is: ")
-print("The 'item' is located in this room!")
+print("The " + str(rooms[current_room].get('items', [])) + " is located in this room!")
 
-while True:
-    print("Move either north, south, east, or west using 'move_direction'.")
-
-
-    move = input(f"Enter your move: ")
-    move = move.split(" ", 1) 
-    if move[0] == 'exit':
-            print("Do you want to exit the game?")
-            confirm_exit = input("Type 'yes' to confirm exit: ")
-            if confirm_exit.lower() != 'yes':
-                continue
-            break
-    elif move[1] in rooms[current_room]:
-        current_room = rooms[current_room][move[1]]
-        print("You're in the " + current_room + ". Current inventory: " + str(inventory))
+def main():
+    global current_room
+    global inventory
     
-    else:
-        print("You can't move in that direction.")
-        print("You're still in " + current_room)
-    
+    while True:
+        print("Move either north, south, east, or west using 'move_direction' or 'exit' to quit the game.")
 
-#will possible need for loop for checking and outputing inventory items in the current room
-#will possibly add import module 'os' for clearing screen after each move showing current room and inventory only
 
+        move = input(f"Enter your move: ")
+        move = move.split(" ", 1) 
+        if move[0] == 'exit':
+                print("Do you want to exit the game?")
+                confirm_exit = input("Type 'yes' to confirm exit: ")
+                if confirm_exit.lower() != 'yes':
+                    continue
+                break
+        elif move[1] in rooms[current_room]:
+            current_room = rooms[current_room][move[1]]
+            print("You're in the " + current_room + ". Current inventory: " + str(inventory) + "\n")
+            status()  
+
+        elif move[0] == "get":
+            item = move[1]
+            if "items" in rooms[current_room] and item in rooms[current_room]['items']:
+                rooms[current_room]['items'].remove(item)
+                inventory.append(item)
+                print(f"You have collected the {item}.")
+                status()  
+            else:
+                print("Item not found in this room.")
+
+        
+        else:
+            print("You can't move in that direction.")
+            print("You're still in " + current_room)
+
+if __name__ == "__main__":    # main funtion of game
+    main()
